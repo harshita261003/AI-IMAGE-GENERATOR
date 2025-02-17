@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+    <!-- 🔹 Background Video -->
+    <video autoplay loop muted class="bg-video">
+        <source src="{{ url_for('static', filename='Image.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="container">
+        <h1>Historical Image Generator</h1>
+        <h3>Made By:</h3>
+
+        <!-- Logout Button -->
+        <button class="custom-button logout" onclick="logout()">Logout</button>
+
+        <!-- Training Button -->
+        <button class="custom-button train" onclick="startTraining()">Train</button>
+
+        <!-- Progress Bar for Training -->
+        <div id="trainingProgressContainer" class="hidden">
+            <p>Training in progress...</p>
+            <progress id="trainingProgress" value="0" max="100"></progress>
+            <span id="trainingPercentage">0%</span> <!-- Display Percentage -->
+        </div>
+
+        <!-- Input and Image Generation -->
+        <input type="text" id="prompt" placeholder="Enter your prompt here">
+        <button onclick="generateImage()">Generate Image</button>
+
+        <div id="loading" class="hidden">Generating...</div>
+
+        <div id="imageContainer" class="hidden">
+            <button onclick="closeImage()" id="closeButton">✖ Close</button>
+            <img id="generatedImage" alt="Generated Image">
+        </div>
+    </div>
+
+    <script>
+        // Generate Image function
+        function generateImage() {
+            let prompt = document.getElementById("prompt").value;
+            let loading = document.getElementById("loading");
+            let imageContainer = document.getElementById("imageContainer");
+            let image = document.getElementById("generatedImage");
+
+            if (!prompt) {
+                alert("Please enter a prompt!");
+                return;
+            }
+
+            loading.classList.remove("hidden");
+            imageContainer.classList.add("hidden");
+
+            fetch("/generate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ prompt: prompt })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.image_base64) {
+                    image.src = data.image_base64;
+                    imageContainer.classList.remove("hidden");
+                } else {
+                    alert("Error generating image!");
+                }
+                loading.classList.add("hidden");
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Something went wrong!");
+                loading.classList.add("hidden");
+            });
+        }
+
+        // Close generated image
+        function closeImage() {
+            document.getElementById("imageContainer").classList.add("hidden");
+        }
+
+        // Logout function (Redirect to login page)
+        function logout() {
+            fetch("/logout")
+                .then(() => {
+                    window.location.href = "/login";  // Redirect to login page
+                })
+                .catch(error => {
+                    console.error("Error during logout:", error);
+                    alert("Something went wrong during logout!");
+                });
+        }
+
+        // Start Training function
+        function startTraining() {
+            // Show the progress bar container
+            document.getElementById("trainingProgressContainer").classList.remove("hidden");
+            let progressBar = document.getElementById("trainingProgress");
+            let percentageText = document.getElementById("trainingPercentage");
+
+            let progress = 0;
+            let interval = setInterval(() => {
+                if (progress < 100) {
+                    progress += 1;
+                    progressBar.value = progress;
+                    percentageText.textContent = `${progress}%`; // Update the percentage text
+                } else {
+                    clearInterval(interval);
+                    alert("Training complete!");
+                }
+            }, 100);  // Simulate training progress
+        }
+    </script>
+
+</body>
+</html>
