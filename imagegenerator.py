@@ -5,14 +5,14 @@ import torch
 from torch import autocast
 from diffusers import StableDiffusionPipeline
 
-ctk.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
-ctk.set_default_color_theme("dark-blue")  # Themes: "blue" (standard), "green", "dark-blue"
+ctk.set_appearance_mode("Dark")  
+ctk.set_default_color_theme("dark-blue")  
 
 
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
-        # configures window
+      
         self.default_window_width = 1200
         self.default_window_height = 800
         self.authorization_token = "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"
@@ -20,7 +20,7 @@ class App(ctk.CTk):
         self.title("Image Generator")
         self.geometry(f"{self.default_window_width}x{self.default_window_height}")
 
-        # generates user interface
+
         self.windowlabel = ctk.CTkLabel(self, text="AI Image Generator",
                                         font=ctk.CTkFont(size=30, weight="bold"), padx=50, pady=50, text_color="white")
         self.windowlabel.pack()
@@ -64,11 +64,11 @@ class App(ctk.CTk):
             self.image.save('generatedimage.png')
             self.img = ImageTk.PhotoImage(self.image)
 
-            # If an image already exists, remove it first
+           
             if self.imageview:
                 self.imageview.pack_forget()
 
-            # Create a new label to display the image
+       
             self.imageview = ctk.CTkLabel(self, width=600, height=400)
             self.imageview.pack()
             self.imageview.configure(image=self.img)
@@ -78,7 +78,7 @@ class App(ctk.CTk):
         self.generatebutton.configure(state="normal")
 
     def clear(self):
-        # Remove the current image if it exists
+      
         if self.imageview:
             self.imageview.pack_forget()
 
