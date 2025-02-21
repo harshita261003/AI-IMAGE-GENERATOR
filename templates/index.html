@@ -8,7 +8,7 @@
 </head>
 <body>
 
-    <!-- 🔹 Background Video -->
+   
     <video autoplay loop muted class="bg-video">
         <source src="{{ url_for('static', filename='Image.mp4') }}" type="video/mp4">
         Your browser does not support the video tag.
@@ -18,20 +18,20 @@
         <h1>Historical Image Generator</h1>
         <h3>Made By:</h3>
 
-        <!-- Logout Button -->
+      
         <button class="custom-button logout" onclick="logout()">Logout</button>
 
-        <!-- Training Button -->
+
         <button class="custom-button train" onclick="startTraining()">Train</button>
 
-        <!-- Progress Bar for Training -->
+     
         <div id="trainingProgressContainer" class="hidden">
             <p>Training in progress...</p>
             <progress id="trainingProgress" value="0" max="100"></progress>
             <span id="trainingPercentage">0%</span> <!-- Display Percentage -->
         </div>
 
-        <!-- Input and Image Generation -->
+      
         <input type="text" id="prompt" placeholder="Enter your prompt here">
         <button onclick="generateImage()">Generate Image</button>
 
@@ -44,7 +44,7 @@
     </div>
 
     <script>
-        // Generate Image function
+        
         function generateImage() {
             let prompt = document.getElementById("prompt").value;
             let loading = document.getElementById("loading");
@@ -81,12 +81,12 @@
             });
         }
 
-        // Close generated image
+
         function closeImage() {
             document.getElementById("imageContainer").classList.add("hidden");
         }
 
-        // Logout function (Redirect to login page)
+      
         function logout() {
             fetch("/logout")
                 .then(() => {
@@ -98,9 +98,9 @@
                 });
         }
 
-        // Start Training function
+
         function startTraining() {
-            // Show the progress bar container
+          
             document.getElementById("trainingProgressContainer").classList.remove("hidden");
             let progressBar = document.getElementById("trainingProgress");
             let percentageText = document.getElementById("trainingPercentage");
@@ -115,7 +115,7 @@
                     clearInterval(interval);
                     alert("Training complete!");
                 }
-            }, 100);  // Simulate training progress
+            }, 100);  
         }
     </script>
 
