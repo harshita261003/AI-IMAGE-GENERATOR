@@ -11,7 +11,7 @@ from diffusers import StableDiffusionPipeline
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
 
-# MySQL Database Configuration
+
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'  # Change if needed
 app.config['MYSQL_PASSWORD'] = ''  # Change if needed
@@ -22,7 +22,7 @@ bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = "login"  # Direct user to login page if not authenticated
 
-# User Class for Flask-Login
+
 class User(UserMixin):
     def __init__(self, id, username, email):
         self.id = id
@@ -39,7 +39,7 @@ def load_user(user_id):
         return User(user[0], user[1], user[2])
     return None
 
-# Authentication Routes
+
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
@@ -88,13 +88,12 @@ def logout():
     flash("You have been logged out.", "info")
     return redirect(url_for("login"))
 
-# Home Route - Protected by Login
+
 @app.route("/")
 @login_required
 def home():
     return render_template("index.html", username=current_user.username)
 
-# Stable Diffusion Setup
 HUGGINGFACE_TOKEN = os.getenv("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")  # Replace with your token
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -116,11 +115,11 @@ def generate():
     if not prompt:
         return jsonify({"error": "Prompt cannot be empty"}), 400
 
-    # Generate Image
+
     with torch.autocast(device.type):
         image = pipe(prompt, guidance_scale=8.5).images[0]
 
-    # Convert image to Base64 string
+   
     buffered = BytesIO()
     image.save(buffered, format="PNG")
     img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
